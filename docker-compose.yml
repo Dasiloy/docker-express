@@ -1,0 +1,44 @@
+services:
+  redis:
+    image: redis:latest
+  postgres:
+    image: postgres:latest
+    environment: 
+      POSTGRES_PASSWORD: postgres_password
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - /app/node_modules # to avoid mounting node_modules, we bookmark it
+      - ./server:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres_password
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=postgres
+  web:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+
