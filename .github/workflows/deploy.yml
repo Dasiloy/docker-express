@@ -27,6 +27,7 @@ jobs:
           CI: true
         run: docker run  -e CI=true  docker-express/test
 
+        # Log in Docker
       - name: Login to Docker
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
