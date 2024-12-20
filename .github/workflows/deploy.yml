@@ -29,19 +29,19 @@ jobs:
 
       # Build Frontend Production Image
       - name: Build Frontend Production Image
-        run: docker build -t docker-express/client:latest ./client
+        run: docker build -t dasiloy/docker-express-client:latest ./client
 
       # Build Server Production Image
       - name: Build Server Production Image
-        run: docker build -t docker-express/api:latest ./api
+        run: docker build -t dasiloy/docker-express-api:latest ./api
 
       # Build Frontend Production Image
       - name: Build Worker Production Image
-        run: docker build -t docker-express/worker:latest ./worker
+        run: docker build -t dasiloy/docker-express-worker:latest ./worker
 
       # Build Frontend Production Image
       - name: Build Frontend Production Image
-        run: docker build -t docker-express/nginx:latest ./nginx
+        run: docker build -t dasiloy/docker-express-nginx:latest ./nginx
 
        # Log in Docker
       - name: Login to Docker
@@ -52,19 +52,19 @@ jobs:
 
         # Push Frontend Production Image
       - name: Push Frontend Production Image
-        run: docker push docker-express/client
+        run: docker push dasiloy/docker-express-client
 
         # Push Server Production Image
       - name: Push Server Production Image
-        run: docker push docker-express/api
+        run: docker push dasiloy/docker-express-api
 
         # Push Worker Production Image
       - name: Push Worker Production Image
-        run: docker push docker-express/worker
+        run: docker push dasiloy/docker-express-worker
 
          # Push Nginx Production Image
       - name: Push NginX Production Image
-        run: docker push docker-express/nginx
+        run: docker push dasiloy/docker-express-nginx
 
 
 
