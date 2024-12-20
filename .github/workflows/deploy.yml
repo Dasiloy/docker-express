@@ -19,7 +19,7 @@ jobs:
 
       # Build the Test Image
       - name: Build Test Docker Image
-        run: docker build -t docker-express/test:latest -f Dockerfile.test ./client
+        run: docker build -t docker-express/test:latest -f ./client/Dockerfile.test ./client
 
 
       # Run the Test Container
