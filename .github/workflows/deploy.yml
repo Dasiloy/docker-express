@@ -1,0 +1,85 @@
+# Name of Workflow
+name: Deploy Application
+
+# Event to trigger it
+on:
+  push:
+    branches:
+      - main
+
+# List of Jobs to run
+jobs:
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout Branch as first step
+      - name: Initial Setup
+        uses: actions/checkout@v2
+
+      # Build the Test Image
+      - name: Build Test Docker Image
+        run: docker build -t docker-express/test:latest -f Dockerfile.test ./client
+
+
+      # Run the Test Container
+      - name: Run Tests
+        env:
+          CI: true
+        run: docker run docker-express/test
+
+  build:
+    name: Build Production Image
+    runs-on: ubuntu-latest
+    needs: test # This job depends on the 'test' job
+    steps:
+      # Checkout Branch as first step
+      - name: Initial Setup
+        uses: actions/checkout@v2
+
+      # Login to Docker
+      - name: Login to Docker
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      # Build Frontend Production Image
+      - name: Build Frontend Production Image
+        run: docker build -t docker-express/client:latest ./client
+
+      # Build Frontend Production Image
+      - name: Build Server Production Image
+        run: docker build -t docker-express/api:latest ./api
+
+      # Build Frontend Production Image
+      - name: Build Worker Production Image
+        run: docker build -t docker-express/worker:latest ./worker
+
+      # Build Frontend Production Image
+      - name: Build Frontend Production Image
+        run: docker build -t docker-express/nginx:latest ./nginx
+      
+
+  # deploy:
+  #   name: Deploy to Elastic Beanstalk
+  #   runs-on: ubuntu-latest
+  #   needs: build # This job depends on the 'build' job
+  #   steps:
+  #     # Checkout Branch as first step
+  #     - name: Initial Setup
+  #       uses: actions/checkout@v2
+
+  #     # Deploy to AWS Elastic Beanstalk (Example using EB CLI)
+  #     - name: Deploy Application
+  #       env:
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+  #         AWS_REGION: "us-east-1" # Change to your AWS region
+  #       run: |
+  #         pip install awsebcli
+  #         eb init -p docker my-app --region $AWS_REGION
+  #         eb deploy
+ 
+
+
+
+
+ 
