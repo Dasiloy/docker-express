@@ -15,15 +15,20 @@ services:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-  server:
+  router:
+    restart: always
     build:
-      context: ./server
+      context: ./nginx
       dockerfile: Dockerfile.dev
     ports:
-      - "8000:8000"
+      - '4000:80'
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
     volumes:
-      - /app/node_modules # to avoid mounting node_modules, we bookmark it
-      - ./server:/app
+      - /app/node_modules 
+      - ./api:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -32,13 +37,14 @@ services:
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_NAME=postgres
-  web:
+      - PORT=8000
+  client:
     build:
       context: ./client
       dockerfile: Dockerfile.dev
-    ports:
-      - "3000:3000"
     volumes:
       - /app/node_modules
       - ./client:/app
+    environment:
+      - WDS_SOCKET_PORT=0
 

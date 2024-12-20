@@ -14,43 +14,39 @@ class Fib extends Component {
   }
 
   async fetchValues() {
-    const values = await axios.get("localhost:8000/values");
-    console.log(values);
-    // this.setState({ values: values.data });
+    const values = await axios.get("/api/values");
+
+    this.setState({ values: values.data });
   }
 
   async fetchIndexes() {
-    const seenIndexes = await axios.get("localhost:8000/indices");
-    // this.setState({
-    //   indices: seenIndexes.data,
-    // });
+    const seenIndexes = await axios.get("/api/indices");
+    this.setState({
+      indices: seenIndexes.data,
+    });
   }
 
   handleSubmit = async (event) => {
     event.preventDefault();
 
-    await axios.post("localhost:8000/index", {
+    await axios.post("/api/index", {
       index: this.state.index,
     });
     this.setState({ index: "" });
   };
 
   renderSeenIndexes() {
-    return this.state.seenIndexes.map(({ number }) => number).join(", ");
+    return this.state.indices.map(({ index }) => index).join(", ");
   }
 
   renderValues() {
-    const entries = [];
-
-    for (let key in this.state.values) {
-      entries.push(
-        <div key={key}>
-          For index {key} I calculated {this.state.values[key]}
+    return this.state.values.map((v) => {
+      return (
+        <div key={v.index}>
+          For index {v.index} I calculated {v.value}
         </div>
       );
-    }
-
-    return entries;
+    });
   }
 
   render() {
@@ -66,10 +62,10 @@ class Fib extends Component {
         </form>
 
         <h3>Indexes I have seen:</h3>
-        {/* {this.renderSeenIndexes()} */}
+        {this.renderSeenIndexes()}
 
         <h3>Calculated Values:</h3>
-        {/* {this.renderValues()} */}
+        {this.renderValues()}
       </div>
     );
   }
