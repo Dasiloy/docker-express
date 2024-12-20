@@ -27,18 +27,11 @@ jobs:
           CI: true
         run: docker run  -e CI=true  docker-express/test
 
-        # Log in Docker
-      - name: Login to Docker
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-
       # Build Frontend Production Image
       - name: Build Frontend Production Image
         run: docker build -t docker-express/client:latest ./client
 
-      # Build Frontend Production Image
+      # Build Server Production Image
       - name: Build Server Production Image
         run: docker build -t docker-express/api:latest ./api
 
@@ -49,6 +42,31 @@ jobs:
       # Build Frontend Production Image
       - name: Build Frontend Production Image
         run: docker build -t docker-express/nginx:latest ./nginx
+
+       # Log in Docker
+      - name: Login to Docker
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
+        # Push Frontend Production Image
+      - name: Push Frontend Production Image
+        run: docker push docker-express/client
+
+        # Push Server Production Image
+      - name: Push Server Production Image
+        run: docker push docker-express/api
+
+        # Push Worker Production Image
+      - name: Push Worker Production Image
+        run: docker push docker-express/worker
+
+         # Push Nginx Production Image
+      - name: Push NginX Production Image
+        run: docker push docker-express/nginx
+
+
 
 
 
