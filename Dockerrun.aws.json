@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+      "hostname": "client",
+      "essential": false,
+      "image": "dasiloy/docker-express-client"
+    },
+    {
+      "name": "api",
+      "hostname": "api",
+      "essential": false,
+      "image": "dasiloy/docker-express-api"
+    },
+    {
+      "name": "worker",
+      "hostname": "worker",
+      "essential": false,
+      "image": "dasiloy/docker-express-worker"
+    },
+    {
+      "name": "nginx",
+      "hostname": "router",
+      "essential": true,
+      "image": "dasiloy/docker-express-nginx",
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": ["client", "api"]
+    }
+  ]
+}

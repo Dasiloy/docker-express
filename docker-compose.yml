@@ -21,7 +21,7 @@ services:
       context: ./nginx
       dockerfile: Dockerfile.dev
     ports:
-      - '4000:80'
+      - '3000:80'
   api:
     build:
       context: ./api
@@ -48,3 +48,41 @@ services:
     environment:
       - WDS_SOCKET_PORT=0
 
+
+
+# version: "3"
+# services:
+#   client:
+#     image: "rallycoding/multi-client"
+#     mem_limit: 128m
+#     hostname: client
+#   server:
+#     image: "rallycoding/multi-server"
+#     mem_limit: 128m
+#     hostname: api
+#     environment:
+#       - REDIS_HOST=$REDIS_HOST
+#       - REDIS_PORT=$REDIS_PORT
+#       - PGUSER=$PGUSER
+#       - PGHOST=$PGHOST
+#       - PGDATABASE=$PGDATABASE
+#       - PGPASSWORD=$PGPASSWORD
+#       - PGPORT=$PGPORT
+#   worker:
+#     image: "rallycoding/multi-worker"
+#     mem_limit: 128m
+#     hostname: worker
+#     environment:
+#       - REDIS_HOST=$REDIS_HOST
+#       - REDIS_PORT=$REDIS_PORT
+#   nginx:
+#     image: "rallycoding/multi-nginx"
+#     mem_limit: 128m
+#     hostname: nginx
+#     ports:
+#       - "80:80"
+
+
+# DB_NAME=multi-docker
+# DB_USERNAME=postgres
+# DB_PASSWORD=$159357280Dio
