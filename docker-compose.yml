@@ -1,88 +1,32 @@
+version: "3"
 services:
-  redis:
-    image: redis:latest
-  postgres:
-    image: postgres:latest
-    environment: 
-      POSTGRES_PASSWORD: postgres_password
-  worker:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./worker
-    volumes:
-      - /app/node_modules
-      - ./worker:/app
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-  router:
-    restart: always
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.dev
-    ports:
-      - '3000:80'
-  api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules 
-      - ./api:/app
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres_password
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=postgres
-      - PORT=8000
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+    image: "dasiloy/docker-express-client"
+    mem_limit: 128m
+    hostname: client
+  server:
+    image: "dasiloy/docker-express-api"
+    mem_limit: 128m
+    hostname: api
     environment:
-      - WDS_SOCKET_PORT=0
-
-
-
-# version: "3"
-# services:
-#   client:
-#     image: "rallycoding/multi-client"
-#     mem_limit: 128m
-#     hostname: client
-#   server:
-#     image: "rallycoding/multi-server"
-#     mem_limit: 128m
-#     hostname: api
-#     environment:
-#       - REDIS_HOST=$REDIS_HOST
-#       - REDIS_PORT=$REDIS_PORT
-#       - PGUSER=$PGUSER
-#       - PGHOST=$PGHOST
-#       - PGDATABASE=$PGDATABASE
-#       - PGPASSWORD=$PGPASSWORD
-#       - PGPORT=$PGPORT
-#   worker:
-#     image: "rallycoding/multi-worker"
-#     mem_limit: 128m
-#     hostname: worker
-#     environment:
-#       - REDIS_HOST=$REDIS_HOST
-#       - REDIS_PORT=$REDIS_PORT
-#   nginx:
-#     image: "rallycoding/multi-nginx"
-#     mem_limit: 128m
-#     hostname: nginx
-#     ports:
-#       - "80:80"
-
-
-# DB_NAME=multi-docker
-# DB_USERNAME=postgres
-# DB_PASSWORD=$159357280Dio
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - DB_USERNAME=$DB_USERNAME
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+      - DB_NAME=$DB_NAME
+      - PORT=$PORT
+  worker:
+    image: "dasiloy/docker-express-worker"
+    mem_limit: 128m
+    hostname: worker
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+  nginx:
+    image: "dasiloy/docker-express-nginx"
+    mem_limit: 128m
+    hostname: router
+    ports:
+      - "80:80"
