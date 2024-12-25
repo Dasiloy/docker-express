@@ -5,24 +5,28 @@
       "name": "client",
       "hostname": "client",
       "essential": false,
+      "memory": 128,
       "image": "dasiloy/docker-express-client"
     },
     {
       "name": "api",
       "hostname": "api",
       "essential": false,
+      "memory": 128,
       "image": "dasiloy/docker-express-api"
     },
     {
       "name": "worker",
       "hostname": "worker",
       "essential": false,
+      "memory": 128,
       "image": "dasiloy/docker-express-worker"
     },
     {
       "name": "nginx",
       "hostname": "router",
       "essential": true,
+      "memory": 128,
       "image": "dasiloy/docker-express-nginx",
       "portMappings": [
         {

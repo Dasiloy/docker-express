@@ -66,6 +66,21 @@ jobs:
       - name: Push NginX Production Image
         run: docker push dasiloy/docker-express-nginx
 
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v18
+        with:
+          application_name: multi-express-app
+          environment_name: Multi-express-app-env
+          existing_bucket_name: elasticbeanstalk-us-east-1-977098995641
+          region: us-east-1
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+
 
 
 
